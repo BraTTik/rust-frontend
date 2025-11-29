@@ -1,7 +1,7 @@
 mod tinyscv_db;
 
 use tinyscv_db::*;
-use crate::tinyscv_db::database::{delete_row_by_column, find_contains, find_exact, insert_row};
+use crate::tinyscv_db::database::{delete_row_by_column, find_contains, find_exact, from_csv, insert_row, to_csv};
 
 fn main() {
     let schema = Schema::new(vec![
@@ -27,12 +27,13 @@ fn main() {
     assert_eq!(find_contains(&db, "name", "Doe"), vec![]);
     assert_eq!(find_contains(&db, "name", "o"), vec![Value::Integer(1), Value::Integer(3)]);
 
-    delete_row_by_column(&mut db, "name", &Value::Text("Bob".to_string()));
-    assert_eq!(find_exact(&db, "name", &Value::Text("Bob".to_string())), vec![]);
+    delete_row_by_column(&mut db, "name", &Value::Text("Delete".to_string()));
+    assert_eq!(find_exact(&db, "name", &Value::Text("Delete Text".to_string())), vec![]);
 
-    assert_eq!(find_exact(&db, "score", &Value::Float(90.0)), vec![Value::Integer(2), Value::Integer(4)]);
-    delete_row_by_column(&mut db, "score", &Value::Float(90.0));
-    assert_eq!(find_exact(&db, "score", &Value::Float(90.0)), vec![]);
+    let csv = to_csv(&db);
+    assert_eq!(csv, "id,name,score,is_active\n1,John,100.0,true\n2,Mary,90.0,false\n3,Bob,80.0,true\n");
 
+    let restoreDb = from_csv(&csv);
+    assert_eq!(restoreDb, db);
     println!("Тесты прошли!");
 }

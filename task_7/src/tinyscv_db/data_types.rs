@@ -1,4 +1,4 @@
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum DataType {
     Integer,
     Text,
@@ -33,5 +33,31 @@ impl DataType {
             (DataType::Float, _) => Err(DataTypeError::Float),
             (DataType::Boolean, _) => Err(DataTypeError::Boolean)
         }
+    }
+}
+
+impl Value {
+    pub fn to_string(&self) -> String {
+        match self {
+            Value::Float(v) => {
+                let mut r = v.to_string();
+                if v % 1.0 == 0.0 {
+                    r += ".0";
+                }
+                r
+            },
+            Value::Integer(v) => v.to_string(),
+            Value::Text(v) => v.clone(),
+            Value::Boolean(v) => v.to_string()
+        }
+    }
+}
+
+pub fn parse_value(value: &str) -> (DataType, Value) {
+    match value {
+        v if v.parse::<i64>().is_ok() => (DataType::Integer, Value::Integer(v.parse::<i64>().unwrap())),
+        v if v.parse::<f32>().is_ok() => (DataType::Float, Value::Float(v.parse::<f32>().unwrap())),
+        v if v.parse::<bool>().is_ok() => (DataType::Boolean, Value::Boolean(v.parse::<bool>().unwrap())),
+        _ => (DataType::Text, Value::Text(value.to_string()))
     }
 }

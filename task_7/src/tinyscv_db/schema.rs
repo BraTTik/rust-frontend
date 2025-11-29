@@ -1,6 +1,6 @@
 use crate::tinyscv_db::*;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Schema {
     pub columns: Vec<(String, DataType)>
 }
