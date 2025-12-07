@@ -1,6 +1,8 @@
 mod string;
+mod number;
 
 use string::*;
+use number::*;
 
 unsafe extern "C" {
     fn console_log(ptr: *const u8, size: usize);
@@ -47,4 +49,41 @@ pub extern "C" fn free(ptr: *mut u8, cap: usize) {
 pub extern "C" fn log_string(ptr: *mut u8, len: usize) {
     let str = read_string(ptr, len);
     log(&str);
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn get_i32_array() -> *const usize {
+    let a = vec![1, 2, 3, 4];
+    write_i32_array(a)
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn sum_i32_array(ptr: *const usize, len: usize) -> i32 {
+    let a = read_i32_array(ptr as *const i32, len);
+    a.iter().sum()
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn sum_i64_array(ptr: *const usize, len: usize) -> i64 {
+    let a = read_i64_array(ptr as *const i64, len);
+    a.iter().sum()
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn sum_f32_array(ptr: *const usize, len: usize) -> f32 {
+    let a = read_f32_array(ptr as *const f32, len);
+    a.iter().sum()
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn sum_f64_array(ptr: *const usize, len: usize) -> f64 {
+    let a = read_f64_array(ptr as *const f64, len);
+    a.iter().sum()
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn pow_i32_array(ptr: *const usize, len: usize) -> *const usize {
+    let a = read_i32_array(ptr as *const i32, len);
+    let pow_a = a.iter().map(|x| x.pow(2)).collect::<Vec<i32>>();
+    write_i32_array(pow_a)
 }
