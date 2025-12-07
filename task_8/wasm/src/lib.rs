@@ -1,6 +1,6 @@
-mod allocations;
+mod string;
 
-use allocations::*;
+use string::*;
 
 unsafe extern "C" {
     fn console_log(ptr: *const u8, size: usize);
@@ -26,30 +26,20 @@ pub extern "C" fn sum(ptr: *const i32, size: usize) -> i32 {
 #[unsafe(no_mangle)]
 pub extern "C" fn get_string() -> *const usize {
     let str = "Hello, world";
-    let header = vec![str.as_ptr() as usize, str.len()];
-
-    log(&format!("{:?}", header));
-    let ptr = header.as_ptr();
-    let len = header.len();
-    core::mem::forget(header);
-    store_allocation(ptr, len);
-
-    ptr
+    write_string(str)
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn malloc(size: usize) -> *const usize {
+pub extern "C" fn malloc(size: usize) -> *const u8 {
     let vec = Vec::with_capacity(size);
     let ptr = vec.as_ptr();
     core::mem::forget(vec);
-    store_allocation(ptr, size);
 
     ptr
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn free(ptr: *mut usize) {
-    let cap = get_cap(ptr);
+pub extern "C" fn free(ptr: *mut u8, cap: usize) {
     unsafe { Vec::from_raw_parts(ptr, 0, cap); }
 }
 
@@ -58,11 +48,3 @@ pub extern "C" fn log_string(ptr: *mut u8, len: usize) {
     let str = read_string(ptr, len);
     log(&str);
 }
-
-pub fn read_string(ptr: *mut u8, len: usize) -> String {
-    let vec = unsafe { core::slice::from_raw_parts(ptr, len) };
-    String::from_utf8_lossy(vec).to_string()
-}
-
-#[unsafe(no_mangle)]
-pub extern "C" fn join() {}
