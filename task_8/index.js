@@ -1,4 +1,4 @@
-import {readString, writeString} from "./string";
+import {readString, writeString, writeStringArray} from "./string";
 import {readI32Array, writeFloat32Array, writeI32Array} from './number';
 
 const I32_BYTE_LENGTH = 4
@@ -16,10 +16,10 @@ async function init() {
 
   const instance = wasm.instance;
 
-  const str = writeString("Hello, world", instance);
-  instance.exports.log_string(str.ptr, str.size);
-
-  readString(instance.exports.get_string(), instance);
+  // const str = writeString("Hello, world", instance);
+  // instance.exports.log_string(str.ptr, str.size);
+  //
+  // readString(instance.exports.get_string(), instance);
 
   const { ptr: s_ptr, size: s_size } = writeI32Array([1, 2, 3], instance)
   console.log(instance.exports.sum_i32_array(s_ptr, s_size));
@@ -31,6 +31,10 @@ async function init() {
   const { ptr: f_ptr, size: f_size } = writeFloat32Array([1.1, 2.2, 3.3], instance);
   console.log(instance.exports.sum_f32_array(f_ptr, f_size))
 
+  const helloWorld = writeStringArray(["Hello, ", "world!"], instance);
+  const joined_str = instance.exports.join_str(helloWorld.ptr);
+
+  console.log(readString(joined_str, instance));
 }
 
 init();

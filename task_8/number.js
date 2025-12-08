@@ -42,7 +42,6 @@ export function readI32Array(ptr, instance) {
 
 export function readI64Array(ptr, instance) {
   const [arr_ptr, len] = readHeader(ptr, instance);
-  instance.exports.free(ptr, 2 * I32_BYTE_LENGTH);
   const arr = new BigInt64Array(instance.exports.memory.buffer, arr_ptr, len);
   const r = [];
   for (let i = 0; i < arr.length; i++) {

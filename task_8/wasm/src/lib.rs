@@ -87,3 +87,12 @@ pub extern "C" fn pow_i32_array(ptr: *const usize, len: usize) -> *const usize {
     let pow_a = a.iter().map(|x| x.pow(2)).collect::<Vec<i32>>();
     write_i32_array(pow_a)
 }
+
+#[unsafe(no_mangle)]
+pub extern "C" fn join_str(ptr: *const usize) -> *const usize {
+    let vec = read_string_arr(ptr as *const i32);
+
+   let res = vec.join("");
+
+    write_string(&res)
+}
