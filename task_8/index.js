@@ -31,7 +31,7 @@ async function init() {
   const { ptr: f_ptr, size: f_size } = writeFloat32Array([1.1, 2.2, 3.3], instance);
   console.log(instance.exports.sum_f32_array(f_ptr, f_size))
 
-  const helloWorld = writeStringArray(["Hello, ", "world!"], instance);
+  const helloWorld = writeStringArray(["Hello, ", "world!", " From", " ", "Rust", "!"], instance);
   const joined_str = instance.exports.join_str(helloWorld.ptr);
 
   console.log(readString(joined_str, instance));

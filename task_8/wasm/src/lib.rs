@@ -94,5 +94,7 @@ pub extern "C" fn join_str(ptr: *const usize) -> *const usize {
 
    let res = vec.join("");
 
+    log(&res);
+    log(&format!("{:?}", vec));
     write_string(&res)
 }

@@ -45,7 +45,8 @@ export function writeStringArray(array, instance) {
   });
 
   const headersStringH = stringHeaders.map(([ptr, size]) => writeI32Array([ptr, size], instance));
-  const header = writeI32Array(headersStringH.map(h => h.ptr), instance);
+  const string_ptr = writeI32Array(headersStringH.map(h => h.ptr), instance);
 
+  const header = writeI32Array([string_ptr.ptr, string_ptr.size], instance);
   return header;
 }

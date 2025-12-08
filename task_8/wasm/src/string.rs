@@ -1,4 +1,3 @@
-use crate::log;
 use crate::number::read_i32_array;
 
 pub fn read_string(ptr: *mut u8, len: usize) -> String {
@@ -15,7 +14,6 @@ pub fn write_string(str: &str) -> *const usize {
     let str_len = chars.len();
     let header = vec![str_ptr, str_len * 4];
 
-    log(&format!("str_ptr = {} len = {}", str_ptr, str_len * 4));
     let ptr = header.as_ptr();
     core::mem::forget(header);
     core::mem::forget(chars);
@@ -40,9 +38,10 @@ pub fn write_string_arr(str_vec: Vec<String>) -> *const usize {
 pub fn read_string_arr(ptr: *const i32) -> Vec<String> {
     let str_headers = unsafe { core::slice::from_raw_parts(ptr, 2) };
     let mut str_vec: Vec<String> = Vec::new();
+    let str_ptrs = read_i32_array(str_headers[0] as *const i32, str_headers[1] as usize);
 
-    for h in str_headers {
-        let header = read_i32_array(*h as *const i32, 2);
+    for h in str_ptrs {
+        let header = read_i32_array(h as *const i32, 2);
         str_vec.push(read_string(header[0] as *mut u8, header[1] as usize));
     }
 
