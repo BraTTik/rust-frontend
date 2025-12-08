@@ -1,7 +1,6 @@
-import {readString, writeString, writeStringArray} from "./string";
+import {readString,  writeStringArray} from "./string";
 import {readI32Array, writeFloat32Array, writeI32Array} from './number';
-
-const I32_BYTE_LENGTH = 4
+import {readBoolean, readBooleanArray, writeBooleanArray} from "./boolean";
 
 async function init() {
   const wasm = await WebAssembly.instantiateStreaming(await fetch('./wasm/target/wasm32-unknown-unknown/debug/wasm.wasm'), {
@@ -35,6 +34,13 @@ async function init() {
   const joined_str = instance.exports.join_str(helloWorld.ptr);
 
   console.log(readString(joined_str, instance));
+
+  console.log("2 = 2", readBoolean(instance.exports.compare_two_num(2, 2)));
+  console.log("0 = 2", readBoolean(instance.exports.compare_two_num(0, 2)));
+
+  instance.exports.print_bool_arr(writeBooleanArray([false, true, false], instance).ptr);
+
+  console.log(readBooleanArray(instance.exports.get_bool_arr(), instance));
 }
 
 init();

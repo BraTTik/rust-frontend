@@ -1,3 +1,4 @@
+
 fn write_arr<T>(a: Vec<T>) -> *const usize {
     let ptr = a.as_ptr();
     let len = a.len();

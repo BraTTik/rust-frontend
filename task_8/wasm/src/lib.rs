@@ -1,8 +1,10 @@
 mod string;
 mod number;
+mod boolean;
 
 use string::*;
 use number::*;
+use crate::boolean::{read_bool_arr, write_bool, write_bool_arr};
 
 unsafe extern "C" {
     fn console_log(ptr: *const u8, size: usize);
@@ -97,4 +99,22 @@ pub extern "C" fn join_str(ptr: *const usize) -> *const usize {
     log(&res);
     log(&format!("{:?}", vec));
     write_string(&res)
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn print_bool_arr(ptr: *const usize) {
+    let arr = read_bool_arr(ptr as *const i32);
+    log(&format!("Rust {:?}", arr));
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn compare_two_num(a: i32, b: i32) -> i32 {
+    write_bool(a == b)
+}
+
+
+#[unsafe(no_mangle)]
+pub extern "C" fn get_bool_arr() -> *const usize {
+    let arr = vec![true, false, true];
+    write_bool_arr(arr)
 }
