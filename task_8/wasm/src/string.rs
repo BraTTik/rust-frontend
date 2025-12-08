@@ -8,7 +8,6 @@ pub fn read_string(ptr: *mut u8, len: usize) -> String {
 }
 
 pub fn write_string(str: &str) -> *const usize {
-
     let chars = str.chars().collect::<Vec<char>>();
     let str_ptr = chars.as_ptr() as usize;
     let str_len = chars.len();
@@ -36,11 +35,14 @@ pub fn write_string_arr(str_vec: Vec<String>) -> *const usize {
 }
 
 pub fn read_string_arr(ptr: *const i32) -> Vec<String> {
+    // получаем пойнтер на массив пойнтерами на строки
     let str_headers = unsafe { core::slice::from_raw_parts(ptr, 2) };
     let mut str_vec: Vec<String> = Vec::new();
+    // читаем пойнтеры на заголовки строки
     let str_ptrs = read_i32_array(str_headers[0] as *const i32, str_headers[1] as usize);
 
     for h in str_ptrs {
+        // читаем заголовок строки
         let header = read_i32_array(h as *const i32, 2);
         str_vec.push(read_string(header[0] as *mut u8, header[1] as usize));
     }
