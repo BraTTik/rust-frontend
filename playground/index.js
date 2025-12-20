@@ -1,17 +1,12 @@
+import init, { sum, greet, create_post } from "./demo/pkg/demo.js"
 
-async function init() {
-  const wasm = await WebAssembly.instantiateStreaming(await fetch('./wasm/target/wasm32-unknown-unknown/debug/wasm.wasm'), {
-    env: {}
-  });
+async function run() {
+  await init();
+  console.log(sum(new Int32Array([1, 2, 3, 4, 5])).slice());
 
-  const instance = wasm.instance;
+  greet("Rust", 2);
 
-  const ptr = instance.exports.malloc(3 * 4);
-
-  const arr = new Int32Array(instance.exports.memory.buffer, ptr)
-  arr.set([1, 2, 3]);
-
-  console.log(instance.exports.sum(ptr, 3))
+  console.log(create_post("Post Test"))
 }
 
-init();
+run();

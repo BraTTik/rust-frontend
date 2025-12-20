@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+    <div>
+        <p>Original image</p>
+        <img id="img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAANlBMVEX///8AAAAtKSJeRS5cXmyFZjrhW0WjhkHkdnrBmUnfpk3Rsknlu0zyyk3/1ErV09D+2kz/31C9TFjFAAAAAXRSTlMAQObYZgAAAytJREFUeNq9V9t24yAMXKAyFUhU/P/P7gBOYieOzTbnrF7aXDQZ3Ubynz//y/yn/t595O8+BfCw0w/dJYETgP7pOUYIZwArAse3X3FZwxnAQJCq7yC8mZwCdIRs5R0E1VKju8oS11JKlXDwIVsx9Vd5JgVAsfpKwisAxF22SpIOUfMzQjAA80SzxQFRNbykADmYaFcXUpIWhoRARCj+eD82BmGu44nXOJqZcnAjh0X97NCEyOVuFVVxDgUuyc3PXfv+3axyfyPOD26sZWc1Z0QQ5gfXrNoOwURK8v9AQCPrnkRRmiegRl8//ASQ5xWR0Eb+i56CmCeAmlvsk1kGhvXenK6BoyVj9rU5556I/BO11GkGflna6BZFH/aWlPDzFa1OF5E6QCnMHKPW1sHeoy5+PoIOUDnAKJsaB1LLs33swrJIH34gYRpJSgtoPofIQY/A+Bu2hNHVNnLo3AQPNwbJUgP4pl4NSxhqTzELzSShbgDyYINo2KAONYeJWZbulJv/iCYty5LGgF61gwsUI+fWQNr8h0rDfxmzVeW8mj43GYMzIGridSIV/mtiur6djuFtdDSjfOsrhJCGv7TugtS+28K0ESLLd1mTLKs/hqRLbRGOByh7JVMeK0IQTk8lvB7wANJMTxgooG1EjMeG0DHUpkL8JBG1AmOXA1HYjYDsBE0SeSnyJFPQTvbbIqZuklCBvP0i3iHnTQepnWDvdn5bS92y2pN/aDmWBq/v/XsiRWQN+8E/tX2P/TgIbiBebw60gpVnA/0+ZWUFuMdxcLOEWl5tKLpXpCBSfJCo5I4umRdrl4l3zrcUtL/YvUCwI3/8SjkEwOnCbCjlekVAG+Tw5qJ6DOC46Xx61LwRcW/V6AgApDWF67VcjgDUO0pMHC8VMR5F0I4jFyKB9aWaiR0DRMj7zGYKxwSgDe1g+8Vls4nBhzC9EQ4MLTO1Utj0DQOe3Ktt3m+CojJMexJmr6vbtCVJD5Pp1drkZPjgNODb/42Vn3PPFTEkCDZmDo8fgW4Q0U/xzxm/TMFvbnegNCYi5CaWav/lo20pViX+/sG5hUOc+bNHb3f2yPcXb7RKPgK7Q1AAAAAASUVORK5CYII=" />
+    </div>
+    <div class="panel">
+        <div class="dimension-input">
+            <label for="width">Width</label>
+            <input class="dimension" type="number" id="width"  value="128" />
+        </div>
+        <span>x</span>
+        <div class="dimension-input">
+            <label for="height">Height</label>
+            <input class="dimension" type="number" id="height" value="128" readonly />
+        </div>
+    </div>
+    <div class="panel">
+        <button id="scale-js">JS</button>
+        <button id="scale-wasm">WASM</button>
+    </div>
+    <div>
+        <canvas id="canvas" width="0" height="0"></canvas>
+    </div>
+</body>
+<script src="./main.js" type="module"></script>
+</html>

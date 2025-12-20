@@ -34,9 +34,9 @@ pub extern "C" fn get_string() -> *const usize {
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn malloc(size: usize) -> *const u8 {
-    let vec = Vec::with_capacity(size);
-    let ptr = vec.as_ptr();
+pub extern "C" fn malloc(size: usize) -> *mut u8 {
+    let mut vec = Vec::with_capacity(size);
+    let ptr = vec.as_mut_ptr();
     core::mem::forget(vec);
 
     ptr

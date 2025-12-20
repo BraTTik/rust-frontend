@@ -18,7 +18,7 @@ fn read_arr<T: Copy>(ptr: *const T, len: usize) -> Vec<T> {
     for el in slice {
         vec.push(*el);
     }
-
+ 
     vec
 }
 
