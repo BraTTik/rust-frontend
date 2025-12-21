@@ -1,4 +1,4 @@
-import init, { scaleImageLanczos as wasmScaleImageLanczos, initSincLUT } from "./lanczos/pkg/lanczos.js";
+import init, { scaleImageLanczos as wasmScaleImageLanczos, initSincLUT, scale_x2 } from "./lanczos/pkg/lanczos.js";
 import { scaleImageLanczos2Pass } from "./lancoz.js";
 (async () => {
   await init();
@@ -21,6 +21,7 @@ import { scaleImageLanczos2Pass } from "./lancoz.js";
 
   const jsButton = document.getElementById('scale-js');
   const wasmButton = document.getElementById('scale-wasm');
+  const x2Button = document.getElementById('x2');
 
   /**
    *
@@ -45,6 +46,7 @@ import { scaleImageLanczos2Pass } from "./lancoz.js";
 
   jsButton.addEventListener('click', scaleJs);
   wasmButton.addEventListener('click', scaleWasm);
+  x2Button.addEventListener('click', scaleX2Wasm);
 
   function scaleWasm() {
     const [targetWidth, targetHeight] = getTargetDimensions();
@@ -73,5 +75,12 @@ import { scaleImageLanczos2Pass } from "./lancoz.js";
       Number(widthInput.value),
       Number(heightInput.value),
     ]
+  }
+
+  function scaleX2Wasm() {
+    const canvas = document.getElementById('canvas');
+    scale_x2(canvas);
+    widthInput.value = canvas.width;
+    heightInput.value = canvas.height;
   }
 })()
