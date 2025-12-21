@@ -1,7 +1,8 @@
 mod tinyscv_db;
 
 use tinyscv_db::*;
-use crate::tinyscv_db::database::{delete_row_by_column, find_contains, find_exact, from_csv, insert_row, to_csv};
+use tinyscv_db::database::{delete_row_by_column, find_contains, find_exact, insert_row };
+use crate::tinyscv_db::serializable::Serializable;
 
 fn main() {
     let schema = Schema::new(vec![
@@ -30,10 +31,11 @@ fn main() {
     delete_row_by_column(&mut db, "name", &Value::Text("Delete".to_string()));
     assert_eq!(find_exact(&db, "name", &Value::Text("Delete Text".to_string())), vec![]);
 
-    let csv = to_csv(&db);
+    let csv = db.to_csv();
+
     assert_eq!(csv, "id,name,score,is_active\n1,John,100.0,true\n2,Mary,90.0,false\n3,Bob,80.0,true\n");
 
-    let restoreDb = from_csv(&csv);
-    assert_eq!(restoreDb, db);
+    let restore_db = Database::from_csv(&csv);
+    assert_eq!(restore_db, db);
     println!("Тесты прошли!");
 }

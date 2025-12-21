@@ -1,8 +1,8 @@
 use crate::tinyscv_db::*;
 use crate::tinyscv_db::data_types::parse_value;
+use crate::tinyscv_db::serializable::Serializable;
 
-#[derive(Debug)]
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 pub struct Database {
     schema: Schema,
     rows: Vec<Row>,
@@ -11,6 +11,48 @@ pub struct Database {
 impl Database {
     pub fn new(schema: Schema) -> Self {
         Self { schema, rows: Vec::new() }
+    }
+}
+
+impl Serializable for Database {
+    fn to_csv(&self) -> String {
+        let mut csv = String::new();
+        let names = self.schema.columns.iter().map(|column| column.0.clone()).collect::<Vec<String>>();
+        csv += names.join(",").as_str();
+        csv += "\n";
+        for row in &self.rows {
+            csv += row.to_csv().as_str();
+        }
+        csv
+    }
+
+    fn from_csv(csv: &str) -> Self {
+        let rows = csv.split("\n").collect::<Vec<&str>>();
+
+        if (rows.is_empty()) {
+            panic!("CSV file is empty");
+        }
+
+        let names = parse_row_names(rows[0]);
+        let data_types = parse_row_data_types(rows[1]);
+
+        if data_types.len() != names.len() {
+            panic!("CSV file has invalid format");
+        }
+
+        let mut schema = Schema::new(vec![]);
+        for (index, name) in names.iter().enumerate() {
+            schema.columns.push((name.clone(), data_types[index]));
+        }
+
+        let mut db = Database::new(schema);
+
+        for row in rows.iter().skip(1) {
+            if row.is_empty() { continue; }
+            db.rows.push(Row::from_csv(row));
+        }
+
+        db
     }
 }
 
@@ -117,46 +159,6 @@ pub fn delete_row_by_column(database: &mut Database, column_name: &str, value: &
     for id in rows_ids {
         delete_row(database, &id);
     }
-}
-
-pub fn to_csv(database: &Database) -> String {
-    let mut csv = String::new();
-    let names = database.schema.columns.iter().map(|column| column.0.clone()).collect::<Vec<String>>();
-    csv += names.join(",").as_str();
-    csv += "\n";
-    for row in &database.rows {
-        csv += row.to_csv().as_str();
-    }
-    csv
-}
-
-pub fn from_csv(csv: &str) -> Database {
-    let rows = csv.split("\n").collect::<Vec<&str>>();
-
-    if (rows.is_empty()) {
-        panic!("CSV file is empty");
-    }
-
-    let names = parse_row_names(rows[0]);
-    let data_types = parse_row_data_types(rows[1]);
-
-    if data_types.len() != names.len() {
-        panic!("CSV file has invalid format");
-    }
-
-    let mut schema = Schema::new(vec![]);
-    for (index, name) in names.iter().enumerate() {
-        schema.columns.push((name.clone(), data_types[index]));
-    }
-
-    let mut db = Database::new(schema);
-
-    for row in rows.iter().skip(1) {
-        if row.is_empty() { continue; }
-        db.rows.push(Row::from_csv(row));
-    }
-
-    db
 }
 
 fn parse_row_names(row: &str) -> Vec<String> {

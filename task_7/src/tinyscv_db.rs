@@ -2,6 +2,7 @@ pub mod data_types;
 pub mod schema;
 pub mod row;
 pub mod database;
+pub(crate) mod serializable;
 
 pub use database::Database;
 pub use schema::Schema;

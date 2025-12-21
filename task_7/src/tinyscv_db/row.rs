@@ -1,5 +1,6 @@
 use crate::tinyscv_db::*;
 use crate::tinyscv_db::data_types::parse_value;
+use crate::tinyscv_db::serializable::Serializable;
 
 #[derive(Debug, PartialEq)]
 pub struct Row {
@@ -11,7 +12,10 @@ impl Row {
         Self { values }
     }
 
-    pub fn to_csv(&self) -> String {
+}
+
+impl Serializable for Row {
+    fn to_csv(&self) -> String {
         let mut str = String::new();
         for value in &self.values {
             str += value.to_string().as_str();
@@ -22,8 +26,8 @@ impl Row {
 
         str
     }
-    
-    pub fn from_csv(csv: &str) -> Self {
+
+    fn from_csv(csv: &str) -> Self {
         let values = csv.split(",").map(|value| parse_value(value).1).collect::<Vec<Value>>();
         Self::new(values)
     }
