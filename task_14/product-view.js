@@ -41,11 +41,11 @@ export class ProductView {
   }
 
   get price() {
-    return new DataView(this.#buffer.buffer, this.#priceOffset, Float64Array.BYTES_PER_ELEMENT).getFloat64(0);
+    return new DataView(this.#buffer.buffer, this.#priceOffset, Float64Array.BYTES_PER_ELEMENT).getFloat64(0, true);
   }
 
   get quantity() {
-    return new DataView(this.#buffer.buffer, this.#quantityOffset, Uint32Array.BYTES_PER_ELEMENT).getUint32(0);
+    return new DataView(this.#buffer.buffer, this.#quantityOffset, Uint32Array.BYTES_PER_ELEMENT).getUint32(0, true);
   }
 
   get inStock() {

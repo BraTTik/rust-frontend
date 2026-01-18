@@ -19,26 +19,44 @@ const product3 = {
   inStock: true,
 }
 
+const createProduct = (i) => ({
+  sku: `TLOG-${String(i + 1).padStart(3, "0")}`,
+  price: Number((Math.random() * 100).toFixed(2)),
+  quantity: 3,
+  inStock: Math.random() > 0.5,
+})
+
 const order = new Order(BigInt(1), "Bratt");
 
-order.addProduct(product1.sku, product1.price, 2, product1.inStock);
-order.addProduct(product2.sku, product2.price, 1, product1.inStock);
-order.addProduct(product3.sku, product3.price, 1, product1.inStock);
-
-const order_bin = order.getItemsBin();
-const arrayLength = order_bin.length;
-let offset = 0;
-let products = [];
-
-while (offset < arrayLength) {
-  const view = new ProductView(order_bin, offset);
-  products.push({
-    sku: view.sku,
-    price: view.price,
-    quantity: view.quantity,
-    inStock: view.inStock
-  });
-  offset += view.length;
+for (let i = 0; i < 1500; i++) {
+  const p = createProduct(i)
+  order.addProduct(p.sku, p.price, p.quantity, p.inStock);
 }
 
-console.log(products);
+console.time("JSON products");
+order.getItemsJS();
+console.timeEnd("JSON products");
+
+console.time("Bin products");
+let p = readBinProducts();
+console.timeEnd("Bin products");
+
+function readBinProducts() {
+  const order_bin = order.getItemsBin();
+  const arrayLength = order_bin.length;
+  let offset = 0;
+  let products = [];
+
+  while (offset < arrayLength) {
+    const view = new ProductView(order_bin, offset);
+    products.push({
+      sku: view.sku,
+      price: view.price,
+      quantity: view.quantity,
+      inStock: view.inStock
+    });
+    offset += view.length;
+  }
+  console.log("Bin products finished reading");
+  return products;
+}
