@@ -28,7 +28,7 @@ const createProduct = (i) => ({
 
 const order = new Order(BigInt(1), "Bratt");
 
-for (let i = 0; i < 1500; i++) {
+for (let i = 0; i < 150000; i++) {
   const p = createProduct(i)
   order.addProduct(p.sku, p.price, p.quantity, p.inStock);
 }

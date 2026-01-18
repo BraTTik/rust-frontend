@@ -1,4 +1,5 @@
 export class ProductView {
+  static decoder = new TextDecoder("utf-8");
   #buffer;
   #offset;
 
@@ -37,7 +38,7 @@ export class ProductView {
 
   get sku() {
     const nameLength = this.#getNameLength();
-    return new TextDecoder().decode(this.#buffer.slice(this.#skuOffset, this.#skuOffset + nameLength))
+    return ProductView.decoder.decode(this.#buffer.subarray(this.#skuOffset, this.#skuOffset + nameLength))
   }
 
   get price() {
